@@ -59,9 +59,9 @@ string_view Reader::peek() const
   if(byteQueue.size() == 0){
     return std::string_view("");;
   }
-  
-  unsigned char peekByte = byteQueue.front();
-  std::string_view byteStringView(reinterpret_cast<const char*>(&peekByte), 1);
+
+  // unsigned char peekByte = byteQueue.front();
+  std::string_view byteStringView(reinterpret_cast<const char*>(&byteQueue.front()), 1);
   return byteStringView;
 }
 
