@@ -56,6 +56,10 @@ uint64_t Writer::bytes_pushed() const
 string_view Reader::peek() const
 {
   // Your code here.
+  if(byteQueue.size() == 0){
+    return std::string_view("");;
+  }
+  
   unsigned char peekByte = byteQueue.front();
   std::string_view byteStringView(reinterpret_cast<const char*>(&peekByte), 1);
   return byteStringView;
