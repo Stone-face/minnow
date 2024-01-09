@@ -23,8 +23,9 @@ void get_URL( const string& host, const string& path )
     tcpsock.read(buf);
     cout << buf;
   }
+
+  tcpsock.close(); // Don't forget it!
   
-  tcpsock.close();
   cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
   cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
