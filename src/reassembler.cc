@@ -36,16 +36,16 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   uint64_t  store_len = min(store_endIdx - first_index, data.length());
   Sub newSub(first_index, data.substr(0, store_len), is_last_substring);
 
-  auto insertedPos = subList.begin();
-  for(; insertedPos != subList.end(); insertedPos++){
-    if(insertedPos->index >= first_index){
-      break;
-    }
-  }
-  subList.insert(insertedPos, newSub);
+  // auto insertedPos = subList.begin();
+  // for(; insertedPos != subList.end(); insertedPos++){
+  //   if(insertedPos->index >= first_index){
+  //     break;
+  //   }
+  // }
+  // subList.insert(insertedPos, newSub);
 
-  // subList.push_back(Sub(first_index, data.substr(0, store_len), is_last_substring));
-  // subList.sort(compareSubs);
+  subList.push_back(newSub);
+  subList.sort(compareSubs);
 
   // Iterate through the list and merge overlapping pairs
   auto it = subList.begin();
