@@ -81,20 +81,24 @@ int main()
     {
       ReassemblerTestHarness test { "insert beyond capacity repeated with different data", 2 };
 
+      cout << "test1 "  << endl;
       test.execute( Insert { "b", 1 } );
       test.execute( BytesPushed( 0 ) );
       test.execute( BytesPending( 1 ) );
 
+      cout << "test2 "  << endl;
       test.execute( Insert { "bX", 2 } );
       test.execute( BytesPushed( 0 ) );
       test.execute( BytesPending( 1 ) );
 
+      cout << "test3 "  << endl;
       test.execute( Insert { "a", 0 } );
 
       test.execute( BytesPushed( 2 ) );
       test.execute( BytesPending( 0 ) );
       test.execute( ReadAll( "ab" ) );
 
+      cout << "test4 "  << endl;
       test.execute( Insert { "bc", 1 } );
       test.execute( BytesPushed( 3 ) );
       test.execute( BytesPending( 0 ) );
