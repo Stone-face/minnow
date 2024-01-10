@@ -43,12 +43,12 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   // Iterate through the list and merge overlapping pairs
   auto it = subList.begin();
   while (it != subList.end()) {
-      auto next = next(it);
+      auto nextElem = next(it);
 
-      if (next != subList.end() && overlap(*it, *next)) {
+      if (nextElem != subList.end() && overlap(*it, *nextElem)) {
           // Merge overlapping pairs
-          *it = merge(*it, *next);
-          subList.erase(next);
+          *it = merge(*it, *nextElem);
+          subList.erase(nextElem);
       } else {
           ++it;
       }
@@ -72,9 +72,9 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     subList.pop_front();
   }
 
-  for(auto it = subList.begin(); it != subList.end(); it++){
+  for(auto it2 = subList.begin(); it2 != subList.end(); it2++){
     stored_bytes = 0;
-    stored_bytes += it->data.length();
+    stored_bytes += it2->data.length();
   }
 
 
