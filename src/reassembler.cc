@@ -60,11 +60,11 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   if(!subList.empty() && subList.front().index <= ack_index){
     const Sub& firstElement = subList.front();
     if(firstElement.index + firstElement.data.length() >= ack_index){
-      int len = min(firstElement.data.length() - (ack_index - firstElement.index), output.available_capacity());
+      // int len = min(firstElement.data.length() - (ack_index - firstElement.index), output.available_capacity());
       // cout << "available_capacity: " << output.available_capacity() << endl;
       // cout << "ack_index " << ack_index << endl;
       // cout << "endIdx " << endIdx << endl;
-      string writedStr = firstElement.data.substr(ack_index - firstElement.index, len);
+      string writedStr = firstElement.data.substr(ack_index - firstElement.index);
       output.push(writedStr);
       cout << "push string: " << writedStr << endl;
       if(firstElement.is_last_substring){
