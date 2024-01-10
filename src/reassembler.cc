@@ -11,7 +11,7 @@ bool Sub::operator<(const Sub& other) const {
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring, Writer& output )
 {
   uint64_t store_endIdx = ack_index + output.available_capacity();
-  if(store_endIdx < first_index){
+  if(store_endIdx <= first_index){
     return;
   }
 
