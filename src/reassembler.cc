@@ -9,7 +9,7 @@ bool Sub::operator<(const Sub& other) const {
 }
 
 bool overlap(const Sub& a, const Sub& b) {
-    return a.index + a.data.length() > b.index;
+    return a.index + a.data.length() >= b.index;
 }
 
 // Function to merge two overlapping pairs
