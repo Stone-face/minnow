@@ -75,6 +75,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   for(auto it2 = subList.begin(); it2 != subList.end(); it2++){
     stored_bytes = 0;
     stored_bytes += it2->data.length();
+    cout << "elem data: " << it2->data << endl;
   }
 
 
