@@ -10,12 +10,12 @@ bool Sub::operator<(const Sub& other) const {
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring, Writer& output )
 {
-  int store_endIdx = ack_index + output.available_capacity();
+  uint64_t store_endIdx = ack_index + output.available_capacity();
   if(store_endIdx < first_index){
     return;
   }
 
-  int store_len = min(store_endIdx - first_index, data.length());
+  uint64_t  store_len = min(store_endIdx - first_index, data.length());
 
   subPriorityQueue.push(Sub(first_index, data.substr(0, store_len), is_last_substring));
   stored_bytes += store_len;
