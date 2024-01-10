@@ -25,7 +25,7 @@ class Reassembler
 {
 private:
   uint64_t ack_index = 0;
-  std::priority_queue<Sub> subPriorityQueue;
+  std::list<Sub> subList;
   uint64_t stored_bytes = 0;
 
 public:
