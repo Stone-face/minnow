@@ -23,7 +23,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
 
   while(!subPriorityQueue.empty() && subPriorityQueue.top().index <= ack_index){
     Sub popedSub = subPriorityQueue.top();
-  
+    cout << "in loop: ack_index " << ack_index << endl;
     if(popedSub.index + popedSub.data.length() >= ack_index){
       int len = min(popedSub.data.length() - (ack_index - popedSub.index), output.available_capacity());
       // cout << "available_capacity: " << output.available_capacity() << endl;
