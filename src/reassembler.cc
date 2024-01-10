@@ -20,7 +20,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   subPriorityQueue.push(Sub(first_index, data.substr(0, store_len), is_last_substring));
   stored_bytes += store_len;
   cout << "push into pq: " << data.substr(0, store_len) << endl;
-
+  cout << "top index: " << subPriorityQueue.top().index << " ack_index: " << ack_index << endl;
   while(!subPriorityQueue.empty() && subPriorityQueue.top().index <= ack_index){
     Sub popedSub = subPriorityQueue.top();
     cout << "in loop: ack_index " << ack_index << endl;
