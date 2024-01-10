@@ -15,12 +15,15 @@ bool overlap(const Sub& a, const Sub& b) {
 // Function to merge two overlapping pairs
 Sub merge(const Sub& a, const Sub& b) {
     string newData;
-    if(a.index + a.data.length() > b.index + a.data.length()){
+    bool isLast;
+    if(a.index + a.data.length() > b.index + b.data.length()){
       newData = a.data;
+      isLast = a.is_last_substring;
     }else{
       newData = a.data + b.data.substr(a.index + a.data.length() - b.index);
+      isLast = b.is_last_substring;
     }
-    return Sub(a.index, newData, b.is_last_substring);
+    return Sub(a.index, newData, isLast);
 }
 
 bool compareSubs(const Sub& a, const Sub& b) {
@@ -75,7 +78,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   stored_bytes = 0;
   for(auto it2 = subList.begin(); it2 != subList.end(); it2++){
     stored_bytes += it2->data.length();
-    cout << "elem data: " << it2->data << endl;
+    // cout << "elem data: " << it2->data << endl;
   }
 
 
