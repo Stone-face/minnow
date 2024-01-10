@@ -16,9 +16,6 @@ public:
     uint64_t index;
     std::string data;
     bool is_last_substring;
-
-    // Overload the less-than operator to define the priority order
-    bool operator<(const Sub& other) const ;
 };
 
 class Reassembler

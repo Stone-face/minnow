@@ -4,9 +4,6 @@
 using namespace std;
 
 Sub::Sub(uint64_t index, const std::string& data, bool is_last_substring) : index(index), data(data), is_last_substring(is_last_substring) {}
-bool Sub::operator<(const Sub& other) const {
-    return index > other.index; // Order by index in descending order
-}
 
 bool overlap(const Sub& a, const Sub& b) {
     return a.index + a.data.length() >= b.index;
@@ -36,12 +33,19 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   if(store_endIdx <= first_index){
     return;
   }
-
   uint64_t  store_len = min(store_endIdx - first_index, data.length());
+  Sub newSub(first_index, data.substr(0, store_len), is_last_substring);
 
-  subList.push_back(Sub(first_index, data.substr(0, store_len), is_last_substring));
-  // subList.push_back(Sub(first_index, data, is_last_substring));
-  subList.sort(compareSubs);
+  auto insertedPos = subList.begin();
+  for(; insertedPos != subList.end(); insertedPos++){
+    if(insertedPos->index >= first_index){
+      break;
+    }
+  }
+  subList.insert(insertedPos, newSub);
+
+  // subList.push_back(Sub(first_index, data.substr(0, store_len), is_last_substring));
+  // subList.sort(compareSubs);
 
   // Iterate through the list and merge overlapping pairs
   auto it = subList.begin();
@@ -78,33 +82,8 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   stored_bytes = 0;
   for(auto it2 = subList.begin(); it2 != subList.end(); it2++){
     stored_bytes += it2->data.length();
-    // cout << "elem data: " << it2->data << endl;
   }
 
-
-
-  /*
-  while(!subPriorityQueue.empty() && subPriorityQueue.top().index <= ack_index){
-    Sub popedSub = subPriorityQueue.top();
-  
-    if(popedSub.index + popedSub.data.length() >= ack_index){
-      int len = min(popedSub.data.length() - (ack_index - popedSub.index), output.available_capacity());
-      // cout << "available_capacity: " << output.available_capacity() << endl;
-      cout << "ack_index " << ack_index << endl;
-      // cout << "endIdx " << endIdx << endl;
-      string writedStr = popedSub.data.substr(ack_index - popedSub.index, len);
-      output.push(writedStr);
-      cout << "push string: " << writedStr << endl;
-      if(popedSub.is_last_substring){
-        output.close();
-      }
-      ack_index += writedStr.length();
-    }
-
-    
-    subPriorityQueue.pop();
-  }
-  */
   
 }
 
