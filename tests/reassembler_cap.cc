@@ -52,22 +52,27 @@ int main()
     {
       ReassemblerTestHarness test { "overlapping inserts", 1 };
 
+      cout << "test1" << endl;
       test.execute( Insert { "ab", 0 } );
       test.execute( BytesPushed( 1 ) );
       test.execute( BytesPending( 0 ) );
 
+      cout << "test2" << endl;
       test.execute( Insert { "ab", 0 } );
       test.execute( BytesPushed( 1 ) );
       test.execute( BytesPending( 0 ) );
 
+      cout << "test3" << endl;
       test.execute( ReadAll( "a" ) );
       test.execute( BytesPushed( 1 ) );
       test.execute( BytesPending( 0 ) );
 
+      cout << "test4" << endl;
       test.execute( Insert { "abc", 0 } );
       test.execute( BytesPushed( 2 ) );
       test.execute( BytesPending( 0 ) );
 
+      cout << "test5" << endl;
       test.execute( ReadAll( "b" ) );
       test.execute( BytesPushed( 2 ) );
       test.execute( BytesPending( 0 ) );
