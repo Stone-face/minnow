@@ -70,7 +70,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
       // cout << "endIdx " << endIdx << endl;
       string writedStr = firstElement.data.substr(ack_index - firstElement.index);
       output.push(writedStr);
-      cout << "push string: " << writedStr << endl;
+      // cout << "push string: " << writedStr << endl;
       if(firstElement.is_last_substring){
         output.close();
       }
