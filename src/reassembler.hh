@@ -10,7 +10,7 @@
 class Sub {
 public:
     // Constructor
-    Sub(uint64_t index, const std::string& data, bool is_last_substring) : index(index), data(data), is_last_substring(is_last_substring) {}
+    Sub(uint64_t index, const std::string& data, bool is_last_substring) ;
 
     // Public attributes
     uint64_t index;
@@ -18,9 +18,7 @@ public:
     bool is_last_substring;
 
     // Overload the less-than operator to define the priority order
-    bool operator<(const Sub& other) const {
-        return index < other.index; // Order by index in descending order
-    }
+    bool operator<(const Sub& other) const ;
 };
 
 class Reassembler

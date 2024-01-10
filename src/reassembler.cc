@@ -3,6 +3,10 @@
 
 using namespace std;
 
+Sub::Sub(uint64_t index, const std::string& data, bool is_last_substring) : index(index), data(data), is_last_substring(is_last_substring) {}
+bool Sub::operator<(const Sub& other) const {
+    return index < other.index; // Order by index in descending order
+}
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring, Writer& output )
 {
@@ -11,9 +15,8 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
 
 
   while(!subPriorityQueue.empty() && subPriorityQueue.top().index <= ack_index){
-    Sub popedSub = subPriorityQueue.pop();
-    stored_bytes -= popedSub.data.length();
-
+    Sub popedSub = subPriorityQueue.top();
+  
     if(popedSub.index + popedSub.data.length() > ack_index){
       string writedStr = popedSub.data.substr(ack_index - popedSub.index);
       output.push(writedStr);
@@ -22,6 +25,9 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
       }
       ack_index = popedSub.index + popedSub.data.length();
     }
+
+    stored_bytes -= popedSub.data.length();
+    subPriorityQueue.pop();
   }
 }
 
