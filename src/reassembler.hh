@@ -3,9 +3,33 @@
 #include "byte_stream.hh"
 
 #include <string>
+#include <iostream>
+#include <cstdint>
+#include <queue>
+
+class Sub {
+public:
+    // Constructor
+    Sub(uint64_t index, const std::string& data, bool is_last_substring) : index(index), data(data), is_last_substring(is_last_substring) {}
+
+    // Public attributes
+    uint64_t index;
+    std::string data;
+    bool is_last_substring;
+
+    // Overload the less-than operator to define the priority order
+    bool operator<(const Sub& other) const {
+        return index < other.index; // Order by index in descending order
+    }
+};
 
 class Reassembler
 {
+private:
+  uint64_t ack_index = 0;
+  std::priority_queue<Sub> subPriorityQueue;
+  uint64_t stored_bytes = 0;
+
 public:
   /*
    * Insert a new substring to be reassembled into a ByteStream.
