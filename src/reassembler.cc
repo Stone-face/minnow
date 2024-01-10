@@ -17,7 +17,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   while(!subPriorityQueue.empty() && subPriorityQueue.top().index <= ack_index){
     Sub popedSub = subPriorityQueue.top();
   
-    if(popedSub.index + popedSub.data.length() > ack_index){
+    if(popedSub.index + popedSub.data.length() >= ack_index){
       string writedStr = popedSub.data.substr(ack_index - popedSub.index);
       output.push(writedStr);
       if(popedSub.is_last_substring){
