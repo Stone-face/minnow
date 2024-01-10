@@ -18,13 +18,13 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     Sub popedSub = subPriorityQueue.top();
   
     if(popedSub.index + popedSub.data.length() >= ack_index){
-      int endIdx = min(popedSub.data.length(), output.available_capacity() + ack_index - popedSub.index);
-      cout << "available_capacity: " << output.available_capacity() << endl;
-      cout << "ack_index " << ack_index << endl;
-      cout << "endIdx " << endIdx << endl;
-      string writedStr = popedSub.data.substr(ack_index - popedSub.index, endIdx);
+      int len = min(popedSub.data.length() - (ack_index - popedSub.index), output.available_capacity());
+      // cout << "available_capacity: " << output.available_capacity() << endl;
+      // cout << "ack_index " << ack_index << endl;
+      // cout << "endIdx " << endIdx << endl;
+      string writedStr = popedSub.data.substr(ack_index - popedSub.index, len);
       output.push(writedStr);
-      cout << "push string: " << writedStr << endl;
+      // cout << "push string: " << writedStr << endl;
       if(popedSub.is_last_substring){
         output.close();
       }
