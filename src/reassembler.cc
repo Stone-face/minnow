@@ -5,7 +5,7 @@ using namespace std;
 
 Sub::Sub(uint64_t index, const std::string& data, bool is_last_substring) : index(index), data(data), is_last_substring(is_last_substring) {}
 bool Sub::operator<(const Sub& other) const {
-    return index < other.index; // Order by index in descending order
+    return index > other.index; // Order by index in descending order
 }
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring, Writer& output )
