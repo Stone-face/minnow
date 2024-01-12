@@ -26,7 +26,7 @@ TCPReceiverMessage TCPReceiver::send( const Writer& inbound_stream ) const
 
   TCPReceiverMessage message{
     ack,
-     static_cast<uint16_t> inbound_stream.available_capacity()
+     static_cast<uint16_t>(inbound_stream.available_capacity())
   };
   
   return message;
