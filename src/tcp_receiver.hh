@@ -7,7 +7,7 @@
 class TCPReceiver
 {
 private:
-  Wrap32 ISN;
+  Wrap32 ISN {0};
   uint64_t checkpoint = 0;
   bool isISNSet = false;
 public:
