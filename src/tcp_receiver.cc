@@ -19,14 +19,14 @@ TCPReceiverMessage TCPReceiver::send( const Writer& inbound_stream ) const
 {
   // Your code here.
   std::optional<Wrap32> ack;
-  if(ISN){
+  if(ISN != nullptr){
     ack = Wrap32::wrap(inbound_stream.bytes_pushed() + 1, ISN);
   }
 
 
   TCPReceiverMessage message{
     ack,
-    inbound_stream.available_capacity()
+     static_cast<uint16_t> inbound_stream.available_capacity()
   };
   
   return message;
