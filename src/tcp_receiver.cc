@@ -1,4 +1,5 @@
 #include "tcp_receiver.hh"
+#include <cstdint>
 
 using namespace std;
 
@@ -26,10 +27,11 @@ TCPReceiverMessage TCPReceiver::send( const Writer& inbound_stream ) const
     ack = Wrap32::wrap(ackNo, ISN);
   }
 
+  uint16_t windowSize = inbound_stream.available_capacity() > UINT16_MAX ? UINT16_MAX : static_cast<uint16_t>(inbound_stream.available_capacity());
 
   TCPReceiverMessage message{
     ack,
-     static_cast<uint16_t>(inbound_stream.available_capacity())
+    windowSize
   };
   
   return message;
