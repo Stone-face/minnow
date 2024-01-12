@@ -11,9 +11,10 @@ void TCPReceiver::receive( TCPSenderMessage message, Reassembler& reassembler, W
     isISNSet = true;
   }
   Wrap32 payloadSeqno = message.SYN ? message.seqno + 1 : message.seqno;
+  uint64_t absSeqno = payloadSeqno.unwrap(ISN, checkpoint);
   string data = message.payload.release();
-  reassembler.insert(payloadSeqno.unwrap(ISN, checkpoint) - 1, data, message.FIN, inbound_stream); // string_view??
-  checkpoint = payloadSeqno.unwrap(ISN, checkpoint) - 1 + data.length() - 1;
+  reassembler.insert(absSeqno - 1, data, message.FIN, inbound_stream); // string_view??
+  checkpoint = absSeqno - 1 + data.length() - 1;
  
 }
 
