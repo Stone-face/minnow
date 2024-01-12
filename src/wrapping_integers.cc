@@ -22,7 +22,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
       return closeVal + (1ULL << 32);
     }
   }else{
-    if(closeVal - checkpoint < (1ULL << 31)){
+    if(closeVal - checkpoint < (1ULL << 31) || closeVal < (1ULL << 32)){
       return closeVal;
     }else{
       return closeVal - (1ULL << 32);
