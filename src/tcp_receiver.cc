@@ -7,6 +7,7 @@ void TCPReceiver::receive( TCPSenderMessage message, Reassembler& reassembler, W
   // Your code here.
   if(message.SYN){
     ISN = message.seqno;  // ??
+    isISNSet = true;
   }
   Wrap32 payloadSeqno = message.SYN ? message.seqno + 1 : message.seqno;
   string data = message.payload.release();
@@ -19,7 +20,7 @@ TCPReceiverMessage TCPReceiver::send( const Writer& inbound_stream ) const
 {
   // Your code here.
   std::optional<Wrap32> ack;
-  if(ISN != nullptr){
+  if(isISNSet){
     ack = Wrap32::wrap(inbound_stream.bytes_pushed() + 1, ISN);
   }
 

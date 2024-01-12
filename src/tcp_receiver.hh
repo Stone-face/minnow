@@ -9,11 +9,13 @@ class TCPReceiver
 private:
   Wrap32 ISN;
   uint64_t checkpoint = 0;
+  bool isISNSet = false;
 public:
   /*
    * The TCPReceiver receives TCPSenderMessages, inserting their payload into the Reassembler
    * at the correct stream index.
    */
+
   void receive( TCPSenderMessage message, Reassembler& reassembler, Writer& inbound_stream );
 
   /* The TCPReceiver sends TCPReceiverMessages back to the TCPSender. */
