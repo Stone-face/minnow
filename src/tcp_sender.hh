@@ -17,7 +17,7 @@ class TCPSender
   bool isTimerRunning = false;
   Reader outbound_stream_  {ByteStream(0)}; 
   uint64_t consecutiveRetrans = 0;
-  Wrap32 ackno{0};
+  Wrap32 seqno{0};
   uint16_t window_size;
 
   std::list<TCPSenderMessage> outstandingSeg;

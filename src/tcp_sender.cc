@@ -13,7 +13,7 @@ bool compareSeg(TCPSenderMessage& a, TCPSenderMessage& b) {
 /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
 TCPSender::TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms ){
   cur_RTO_ms = initial_RTO_ms_;
-  ackno = isn_;
+  seqno = isn_;
   window_size = 1;
 }
 
@@ -46,7 +46,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
 
   }else{
     //if(outbound_stream_.bytes_buffered() != 0){
-      bool SYN = ackno == isn_;
+      bool SYN = seqno == isn_;
       bool FIN = outbound_stream_.is_finished();
       if(outbound_stream_.bytes_buffered() == 0 && !SYN && !FIN){
         return message;
@@ -58,12 +58,12 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       read( outbound_stream_, sendLen, data );
       
       message = {
-        ackno,
+        seqno,
         SYN,
         Buffer(data),
         FIN
       };
-
+      seqno += message.sequence_length();
       outstandingSeg.push_back(message);
       outstandingSeg.sort(compareSeg);
 
@@ -98,7 +98,7 @@ TCPSenderMessage TCPSender::send_empty_message() const
  
   
   message = {
-    ackno + 1,
+    seqno,
     SYN,
     Buffer(data),
     FIN
@@ -113,21 +113,19 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 
   bool isNewData = false;
   if(msg.ackno.has_value()){
-    if(ackno.WrappingInt32() <  msg.ackno.value().WrappingInt32()){
-      ackno = msg.ackno.value();
-      isNewData = true;
+    isNewData = true;
+    for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
+      if (msg.ackno.value().WrappingInt32() >= it->seqno.WrappingInt32() + it->sequence_length()) {
+          it = outstandingSeg.erase(it);
+      } else {
+          ++it;
+      }
     }
   }
   
   window_size = msg.window_size;
 
-  for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
-      if (ackno.WrappingInt32() >= it->seqno.WrappingInt32() + it->sequence_length()) {
-          it = outstandingSeg.erase(it);
-      } else {
-          ++it;
-      }
-  }
+  
   // outstandingSeg.remove_if([ackno](TCPSenderMessage& messgae) { return ackno > messgae.seqno.WrappingInt32() + messgae.sequence_length();})
   if(outstandingSeg.empty()){
     isTimerRunning = false;
