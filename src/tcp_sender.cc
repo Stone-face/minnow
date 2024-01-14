@@ -146,6 +146,8 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
     }
     consecutiveRetrans = 0;
   }
+
+  cout << "list size: " << outstandingSeg.size() << endl;
 }
 
 void TCPSender::tick( const size_t ms_since_last_tick )
