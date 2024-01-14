@@ -117,7 +117,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
   
   window_size = msg.window_size;
 
-  for (auto it = outstandingSeg.begin(); it != outstandingSeg.end();) /* no increment here */) {
+  for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
       if (ackno >= it->seqno + it->sequence_length()) {
           it = myList.erase(it);
       } else {
