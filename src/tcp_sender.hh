@@ -15,9 +15,9 @@ class TCPSender
   uint64_t curTime = 0;
   uint64_t timer;
   bool isTimerRunning = false;
-  Reader outbound_stream_; 
+  Reader outbound_stream_{0}; 
   uint64_t consecutiveRetrans = 0;
-  Wrap32 ackno;
+  Wrap32 ackno{0};
   uint16_t window_size;
 
   std::list<TCPSenderMessage> outstandingSeg;
@@ -25,7 +25,7 @@ public:
 
    /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
   TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn );
-  
+
   /* Push bytes from the outbound stream */
   void push( Reader& outbound_stream );
 
