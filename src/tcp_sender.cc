@@ -98,7 +98,7 @@ TCPSenderMessage TCPSender::send_empty_message() const
  
   
   message = {
-    ackno,
+    ackno + 1,
     SYN,
     Buffer(data),
     FIN
