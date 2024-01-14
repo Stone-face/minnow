@@ -20,12 +20,7 @@ TCPSender::TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn )
 uint64_t TCPSender::sequence_numbers_in_flight() const
 {
   // Your code here.
-  if(outstandingSeg.empty()){
-    return 0;
-  }else{
-    return outstandingSeg.back().sequence_length() + outstandingSeg.back().seqno.WrappingInt32() - outstandingSeg.front().seqno.WrappingInt32();
-  }
-  return outstandingSeg.size();
+  return sequenceNumbersFli;
 }
 
 uint64_t TCPSender::consecutive_retransmissions() const
@@ -53,9 +48,9 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
     //if(outbound_stream_.bytes_buffered() != 0){
       bool SYN = seqno == isn_;
       bool FIN = outbound_stream_.is_finished();
-      cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream_.bytes_buffered() << endl;
+      // cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream_.bytes_buffered() << endl;
       if(outbound_stream_.bytes_buffered() == 0 && !SYN && !FIN){
-        cout << "return empty" << endl;
+        // cout << "return empty" << endl;
         return optional<TCPSenderMessage>{};
       }
       uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
@@ -71,6 +66,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
         FIN
       };
       seqno = seqno + message.sequence_length();
+      sequenceNumbersFli += message.sequence_length();
       outstandingSeg.push_back(message);
       outstandingSeg.sort(compareSeg);
 
@@ -123,6 +119,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
     isNewData = true;
     for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
       if (msg.ackno.value().WrappingInt32() >= it->seqno.WrappingInt32() + it->sequence_length()) {
+          sequenceNumbersFli -= it->sequence_length();
           it = outstandingSeg.erase(it);
       } else {
           ++it;
