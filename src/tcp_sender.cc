@@ -7,7 +7,7 @@ using namespace std;
 
 /* TCPSender constructor (uses a random ISN if none given) */
 
-bool compareSeg(const TCPSenderMessage& a, const TCPSenderMessage& b) {
+bool compareSeg(TCPSenderMessage& a, TCPSenderMessage& b) {
     return a.seqno.WrappingInt32()  < b.seqno.WrappingInt32() ;
 }
 /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
