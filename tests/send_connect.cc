@@ -40,7 +40,7 @@ int main()
       test.execute( ExpectSeqno { isn + 1 } );
       test.execute( ExpectSeqnosInFlight { 1 } );
       test.execute( AckReceived { isn + 1 } );
-      cout << "test: " << endl;
+      // cout << "test: " << endl;
       test.execute( ExpectNoSegment {} );
       test.execute( ExpectSeqnosInFlight { 0 } );
     }

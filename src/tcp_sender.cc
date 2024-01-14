@@ -20,6 +20,11 @@ TCPSender::TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn )
 uint64_t TCPSender::sequence_numbers_in_flight() const
 {
   // Your code here.
+  if(outstandingSeg.empty()){
+    return 0;
+  }else{
+    return outstandingSeg.end().sequence_length() + outstandingSeg.end().seqno.WrappingInt32() - outstandingSeg.front().seqno.WrappingInt32();
+  }
   return outstandingSeg.size();
 }
 
