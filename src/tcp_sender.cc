@@ -48,7 +48,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
     if(outbound_stream_.bytes_buffered() != 0){
       bool SYN = ackno == isn_;
       bool FIN = outbound_stream_.is_finished();
-      uint64_t sendLen = min(outbound_stream_.bytes_buffered(), window_size);
+      uint64_t sendLen = std::min(outbound_stream_.bytes_buffered(), window_size);
       sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
       string data;
       read( outbound_stream_, sendLen, data );
