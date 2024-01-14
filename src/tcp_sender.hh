@@ -4,16 +4,29 @@
 #include "tcp_receiver_message.hh"
 #include "tcp_sender_message.hh"
 #include <random>
+#include <cstdint>
 
 class TCPSender
 {
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
+  uint64_t cur_RTO_ms;
+  uint64_t curTime = 0;
+  uint64_t timer;
+  bool isTimerRunning = false;
+  Reader outbound_stream_; 
+  uint64_t consecutiveRetrans = 0;
+  Wrap32 ackno;
+  uint16_t window_size;
 
+  std::list<TCPSenderMessage> outstandingSeg;
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
-  TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms )
-{}
+  TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms ){
+    cur_RTO_ms = initial_RTO_ms_;
+    ackno = isn_;
+    window_size = UINT16_MAX;
+  }
 
   /* Push bytes from the outbound stream */
   void push( Reader& outbound_stream );

@@ -108,7 +108,7 @@ struct Tick : public Action<StreamAndSender>
   uint64_t ms_;
   std::optional<bool> max_retx_exceeded_ {};
 
-  explicit Tick( uint64_t ms ) : ms_( ms ) {}
+  explicit  Tick( uint64_t ms ) : ms_( ms ) {}
 
   Tick& with_max_retx_exceeded( bool val )
   {
