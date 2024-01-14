@@ -7,7 +7,7 @@
 class TCPSender
 {
   Wrap32 isn_;
-  uint64_t initial_RTO_ms_;
+  // uint64_t initial_RTO_ms_;
 
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
