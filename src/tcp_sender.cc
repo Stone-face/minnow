@@ -10,6 +10,12 @@ using namespace std;
 bool compareSeg(const TCPSenderMessage& a, const TCPSenderMessage& b) {
     return a.seqno.WrappingInt32()  < b.seqno.WrappingInt32() ;
 }
+/* Construct TCP sender with given default Retransmission Timeout and possible ISN */
+TCPSender::TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms ){
+  cur_RTO_ms = initial_RTO_ms_;
+  ackno = isn_;
+  window_size = UINT16_MAX;
+}
 
 uint64_t TCPSender::sequence_numbers_in_flight() const
 {
