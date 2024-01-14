@@ -50,7 +50,8 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       bool FIN = outbound_stream_.is_finished();
       cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream_.bytes_buffered() << endl;
       if(outbound_stream_.bytes_buffered() == 0 && !SYN && !FIN){
-        return message;
+        cout << "return empty" << endl;
+        return optional<TCPSenderMessage>{};
       }
       uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
       uint64_t sendLen = min(outbound_stream_.bytes_buffered(), equalWindowSize);
