@@ -63,7 +63,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
         Buffer(data),
         FIN
       };
-      seqno += message.sequence_length();
+      seqno = seqno + message.sequence_length();
       outstandingSeg.push_back(message);
       outstandingSeg.sort(compareSeg);
 
