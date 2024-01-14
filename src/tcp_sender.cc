@@ -108,11 +108,11 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 {
   // Your code here.
 
-  cur_RTO_ms = initial_RTO_ms_;
-
+  bool isNewData = false;
   if(msg.ackno.has_value()){
     if(ackno.WrappingInt32() <  msg.ackno.value().WrappingInt32()){
       ackno = msg.ackno.value();
+      isNewData = true;
     }
   }
   
@@ -126,15 +126,18 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
       }
   }
   // outstandingSeg.remove_if([ackno](TCPSenderMessage& messgae) { return ackno > messgae.seqno.WrappingInt32() + messgae.sequence_length();})
-
   if(outstandingSeg.empty()){
     isTimerRunning = false;
-  }else{
-    isTimerRunning = true;
-    timer = cur_RTO_ms;
   }
 
-  consecutiveRetrans = 0;
+  if(isNewData){
+    cur_RTO_ms = initial_RTO_ms_;
+    if(!outstandingSeg.empty()){
+      isTimerRunning = true;
+      timer = cur_RTO_ms;
+    }
+    consecutiveRetrans = 0;
+  }
 }
 
 void TCPSender::tick( const size_t ms_since_last_tick )
