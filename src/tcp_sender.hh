@@ -12,10 +12,9 @@ class TCPSender
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
   uint64_t cur_RTO_ms;
-  uint64_t curTime = 0;
   uint64_t timer;
   bool isTimerRunning = false;
-  Reader outbound_stream_ {ByteStream(0)}; 
+  Reader outbound_stream_  {ByteStream(0)}; 
   uint64_t consecutiveRetrans = 0;
   Wrap32 ackno{0};
   uint16_t window_size;

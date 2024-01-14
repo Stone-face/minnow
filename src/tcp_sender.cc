@@ -1,6 +1,6 @@
 #include "tcp_sender.hh"
 #include "tcp_config.hh"
-
+#include <algorithm>
 #include <random>
 
 using namespace std;
@@ -45,11 +45,11 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
     timer = cur_RTO_ms;
 
   }else{
-    if(outbound_stream_.bytes_buffered() ! 0){
+    if(outbound_stream_.bytes_buffered() != 0){
       bool SYN = ackno == isn_;
       bool FIN = outbound_stream_.is_finished();
       uint64_t sendLen = min(outbound_stream_.bytes_buffered(), window_size);
-      sendLen = min(sendLen, TCPConfig::MAX PAYLOAD SIZE);
+      sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
       string data;
       read( outbound_stream_, sendLen, data );
       
@@ -137,6 +137,5 @@ void TCPSender::tick( const size_t ms_since_last_tick )
   if(timer <= 0){
     isTimerRunning = false;
   }
-  curTime += ms_since_last_tick;
-  return curTime;
+  
 }
