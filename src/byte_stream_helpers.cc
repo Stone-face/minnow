@@ -21,7 +21,7 @@ void read( Reader& reader, uint64_t len, std::string& out )
     view = view.substr( 0, len - out.size() ); // Don't return more bytes than desired.
     out += view;
     reader.pop( view.size() );
-    std::cout << "reader outer size: " << reader.bytes_buffered() << std::endl;
+    //std::cout << "reader outer size: " << reader.bytes_buffered() << std::endl;
   }
 }
 
