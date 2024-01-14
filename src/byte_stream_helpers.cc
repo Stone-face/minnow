@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <stdexcept>
-
+#include <iostream>
 /*
  * read: A helper function thats peeks and pops up to `len` bytes
  * from a ByteStream Reader into a string;
@@ -21,7 +21,7 @@ void read( Reader& reader, uint64_t len, std::string& out )
     view = view.substr( 0, len - out.size() ); // Don't return more bytes than desired.
     out += view;
     reader.pop( view.size() );
-    cout << "reader outer size: " << reader.bytes_buffered() << endl;
+    std::cout << "reader outer size: " << reader.bytes_buffered() << endl;
   }
 }
 
