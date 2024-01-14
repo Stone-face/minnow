@@ -3,15 +3,17 @@
 #include "byte_stream.hh"
 #include "tcp_receiver_message.hh"
 #include "tcp_sender_message.hh"
+#include <random>
 
 class TCPSender
 {
   Wrap32 isn_;
-  uint64_t initial_RTO_ms_ = 0;
+  uint64_t initial_RTO_ms_;
 
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
-  TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn );
+  TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms )
+{}
 
   /* Push bytes from the outbound stream */
   void push( Reader& outbound_stream );
