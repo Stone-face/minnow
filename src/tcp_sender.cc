@@ -11,6 +11,7 @@ using namespace std;
 uint64_t TCPSender::sequence_numbers_in_flight() const
 {
   // Your code here.
+  (void)initial_RTO_ms_;
   return {};
 }
 
