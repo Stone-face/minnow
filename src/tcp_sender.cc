@@ -23,7 +23,7 @@ uint64_t TCPSender::sequence_numbers_in_flight() const
   if(outstandingSeg.empty()){
     return 0;
   }else{
-    return outstandingSeg.end().sequence_length() + outstandingSeg.end().seqno.WrappingInt32() - outstandingSeg.front().seqno.WrappingInt32();
+    return outstandingSeg.back().sequence_length() + outstandingSeg.back().seqno.WrappingInt32() - outstandingSeg.front().seqno.WrappingInt32();
   }
   return outstandingSeg.size();
 }
