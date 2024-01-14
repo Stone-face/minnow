@@ -59,6 +59,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
       string data;
       read( outbound_stream_, sendLen, data );
+      cout << "reader outer size: " << outbound_stream_.bytes_buffered() << endl;
       
       message = {
         seqno,
