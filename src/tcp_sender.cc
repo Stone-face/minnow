@@ -45,9 +45,12 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
     timer = cur_RTO_ms;
 
   }else{
-    if(outbound_stream_.bytes_buffered() != 0){
+    //if(outbound_stream_.bytes_buffered() != 0){
       bool SYN = ackno == isn_;
       bool FIN = outbound_stream_.is_finished();
+      if(outbound_stream_.bytes_buffered() == 0 && !SYN && !FIN){
+        return message;
+      }
       uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
       uint64_t sendLen = min(outbound_stream_.bytes_buffered(), equalWindowSize);
       sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
@@ -68,7 +71,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
         isTimerRunning = true;
         timer = cur_RTO_ms;
       }
-    }
+    //}
   }
 
 
