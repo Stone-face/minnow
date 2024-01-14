@@ -12,7 +12,7 @@ class TCPSender
 
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
-  TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms )
+  TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms )
 {}
 
   /* Push bytes from the outbound stream */
