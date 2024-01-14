@@ -128,7 +128,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 
   if(outstandingSeg.empty()){
     isTimerRunning = false;
-  }esle{
+  }else{
     isTimerRunning = true;
     timer = cur_RTO_ms;
   }
