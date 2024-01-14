@@ -11,6 +11,7 @@
 class TCPSender
 {
   Wrap32 isn_;
+  uint64_t checkpoint = 0;
   uint64_t initial_RTO_ms_;
   uint64_t cur_RTO_ms;
   uint64_t timer;

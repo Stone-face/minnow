@@ -8,7 +8,7 @@ using namespace std;
 /* TCPSender constructor (uses a random ISN if none given) */
 
 bool compareSeg(TCPSenderMessage& a, TCPSenderMessage& b) {
-    return a.seqno.WrappingInt32()  < b.seqno.WrappingInt32() ;
+    return a.seqno.unwrap(isn_, checkpoint)  < b.seqno.unwrap(isn_, checkpoint) ;
 }
 /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
 TCPSender::TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms ){
@@ -67,6 +67,8 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       };
       seqno = seqno + message.sequence_length();
       sequenceNumbersFli += message.sequence_length();
+      checkpoint += message.sequence_length();
+
       outstandingSeg.push_back(message);
       outstandingSeg.sort(compareSeg);
 
@@ -118,7 +120,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
   if(msg.ackno.has_value()){
     isNewData = true;
     for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
-      if (msg.ackno.value().WrappingInt32() >= it->seqno.WrappingInt32() + it->sequence_length()) {
+      if (msg.ackno.value().unwrap(isn_, checkpoint) >= it->seqno.unwrap(isn_, checkpoint) + it->sequence_length()) {
           sequenceNumbersFli -= it->sequence_length();
           it = outstandingSeg.erase(it);
       } else {
