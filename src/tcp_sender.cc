@@ -119,7 +119,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 
   for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
       if (ackno.WrappingInt32() >= it->seqno.WrappingInt32() + it->sequence_length()) {
-          it = myList.erase(it);
+          it = outstandingSeg.erase(it);
       } else {
           ++it;
       }
