@@ -49,9 +49,9 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
     //if(outbound_stream_.bytes_buffered() != 0){
       bool SYN = seqno == isn_;
       bool FIN = outbound_stream_.is_finished();
-      // cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream_.bytes_buffered() << endl;
+      cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream_.bytes_buffered() << endl;
       if(outbound_stream_.bytes_buffered() == 0 && !SYN && !FIN){
-        // cout << "return empty" << endl;
+        cout << "return empty" << endl;
         return optional<TCPSenderMessage>{};
       }
       uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
