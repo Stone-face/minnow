@@ -108,7 +108,13 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
   // Your code here.
 
   cur_RTO_ms = initial_RTO_ms_;
-  ackno = msg.ackno.has_value() ? max(ackno, msg.ackno.value()) : ackno;
+
+  if(msg.ackno.has_value()){
+    if(ackno.WrappingInt32() <  msg.ackno.value().WrappingInt32()){
+      ackno = msg.ackno.value();
+    }
+  }
+  
   window_size = msg.window_size;
 
   for (auto it = outstandingSeg.begin(); it != outstandingSeg.end();) /* no increment here */) {
