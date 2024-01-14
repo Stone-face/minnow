@@ -7,9 +7,10 @@ using namespace std;
 
 /* TCPSender constructor (uses a random ISN if none given) */
 
-bool compareSeg(TCPSenderMessage& a, TCPSenderMessage& b) {
-    return a.seqno.unwrap(isn_, checkpoint)  < b.seqno.unwrap(isn_, checkpoint) ;
-}
+// bool compareSeg(TCPSenderMessage& a, TCPSenderMessage& b) {
+//     return a.seqno.unwrap(isn_, checkpoint)  < b.seqno.unwrap(isn_, checkpoint) ;
+// }
+
 /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
 TCPSender::TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms ){
   cur_RTO_ms = initial_RTO_ms_;
@@ -70,7 +71,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       checkpoint += message.sequence_length();
 
       outstandingSeg.push_back(message);
-      outstandingSeg.sort(compareSeg);
+      //outstandingSeg.sort(compareSeg);
 
       if(!isTimerRunning){
         isTimerRunning = true;
