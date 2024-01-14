@@ -15,7 +15,7 @@ class TCPSender
   uint64_t curTime = 0;
   uint64_t timer;
   bool isTimerRunning = false;
-  Reader outbound_stream_(0); 
+  Reader outbound_stream_{0ULL}; 
   uint64_t consecutiveRetrans = 0;
   Wrap32 ackno{0};
   uint16_t window_size;
