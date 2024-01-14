@@ -5,6 +5,7 @@
 #include "tcp_sender_message.hh"
 #include <random>
 #include <cstdint>
+#include <list>
 
 class TCPSender
 {
@@ -22,7 +23,7 @@ class TCPSender
   std::list<TCPSenderMessage> outstandingSeg;
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
-  TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms ){
+  explict TCPSender( uint64_t initial_RTO_ms, std::optional<Wrap32> fixed_isn ) : isn_( fixed_isn.value_or( Wrap32 { std::random_device()() } ) ), initial_RTO_ms_( initial_RTO_ms ){
     cur_RTO_ms = initial_RTO_ms_;
     ackno = isn_;
     window_size = UINT16_MAX;

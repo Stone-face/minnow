@@ -8,7 +8,7 @@ using namespace std;
 /* TCPSender constructor (uses a random ISN if none given) */
 
 bool compareSeg(const TCPSenderMessage& a, const TCPSenderMessage& b) {
-    return a.seqno < b.seqno;
+    return a.seqno.WrappingInt32()  < b.seqno.WrappingInt32() ;
 }
 
 uint64_t TCPSender::sequence_numbers_in_flight() const
