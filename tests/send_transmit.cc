@@ -161,7 +161,7 @@ int main()
       test.execute( ExpectNoSegment {} );
       test.execute( ExpectSeqno { Wrap32 { isn + 1 + 2 } } );
       test.execute( Push( "23" ) );
-      test.execute( ExpectSeqnosInFlight { 3 } );
+      test.execute( ExpectSeqnosInFlight { 3 } ); // here
       test.execute( ExpectMessage {}.with_data( "2" ) );
       test.execute( ExpectNoSegment {} );
       test.execute( ExpectSeqno { Wrap32 { isn + 1 + 3 } } );
