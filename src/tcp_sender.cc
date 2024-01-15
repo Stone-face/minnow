@@ -62,6 +62,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       cout << "reader outer size before: " << bs.reader().bytes_buffered() << endl;
       // read( bs.reader(), sendLen, data );
       bs.reader().pop(3);
+      bs.writer().push("a");
       cout << "reader outer size: " << bs.reader().bytes_buffered() << endl;
       
       message = {
