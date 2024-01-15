@@ -117,13 +117,15 @@ void TCPSender::push( Reader& outbound_stream )
   // Your code here.
   // bs.reader() = outbound_stream;
   while(true){
-    bool SYN = seqno == isn_;
-    //bool FIN = outbound_stream.is_finished();
-    cout << "SYN: " << SYN <<  "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
     if(window_size == 0){
       cout << "return empty" << endl;
       return;
     }
+    
+    bool SYN = seqno == isn_ && !SYNSent;
+    SYNSent |= SYN;
+    //bool FIN = outbound_stream.is_finished();
+    cout << "SYN: " << SYN <<  "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
     // uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
     uint64_t equalWindowSize =  static_cast<uint64_t>(window_size);
     uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize - SYN);
@@ -141,7 +143,7 @@ void TCPSender::push( Reader& outbound_stream )
     bool FIN = outbound_stream.is_finished() && window_size > 0 && !FINSent;
     FINSent |= FIN;
     cout << "FIN: " << FIN << " window_size: " << window_size << endl;
-    // window_size -= FIN;
+    window_size -= FIN;
 
     if(data.length() == 0 && !SYN && !FIN){
       cout << "return empty" << endl;

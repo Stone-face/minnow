@@ -25,6 +25,7 @@ class TCPSender
   uint16_t window_size;
 
   bool FINSent = false;
+  bool SYNSent = false;
   std::list<TCPSenderMessage> outstandingSeg;
   std::queue<TCPSenderMessage> sendedMessageQueue;
   std::optional<TCPSenderMessage> sendedMessage{};
