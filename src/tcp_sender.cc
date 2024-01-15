@@ -120,7 +120,7 @@ void TCPSender::push( Reader& outbound_stream )
   bool SYN = seqno == isn_;
   //bool FIN = outbound_stream.is_finished();
   cout << "SYN: " << SYN <<  "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
-  if(window_size == 0 || (outbound_stream.bytes_buffered() == 0 && !SYN && !FIN)){
+  if(window_size == 0){
     cout << "return empty" << endl;
     return;
   }
@@ -142,7 +142,7 @@ void TCPSender::push( Reader& outbound_stream )
   cout << "FIN: " << FIN << " window_size: " << window_size << endl;
   // window_size -= FIN;
 
-  if((data.length() == 0 && !SYN && !FIN)){
+  if(data.length() == 0 && !SYN && !FIN){
     cout << "return empty" << endl;
     return;
   }
