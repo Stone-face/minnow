@@ -24,6 +24,7 @@ class TCPSender
   Wrap32 seqno{0};
   uint16_t window_size;
 
+  bool FINSent = false;
   std::list<TCPSenderMessage> outstandingSeg;
   std::queue<TCPSenderMessage> sendedMessageQueue;
   std::optional<TCPSenderMessage> sendedMessage{};

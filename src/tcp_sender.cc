@@ -138,7 +138,8 @@ void TCPSender::push( Reader& outbound_stream )
   read( outbound_stream, sendLen, data );
   cout << "reader outer size: " << outbound_stream.bytes_buffered() << endl;
   
-  bool FIN = outbound_stream.is_finished() && window_size > 0;
+  bool FIN = outbound_stream.is_finished() && window_size > 0 && !FINSent;
+  FINSent = FIN;
   cout << "FIN: " << FIN << " window_size: " << window_size << endl;
   // window_size -= FIN;
 

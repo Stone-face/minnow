@@ -81,7 +81,7 @@ int main()
       test.execute( ExpectMessage {}.with_fin( true ).with_seqno( isn + 1 ) );
       test.execute( ExpectSeqnosInFlight { 1 } );
       test.execute( AckReceived { Wrap32 { isn + 2 } } );
-      test.execute( ExpectSeqno { isn + 2 } );
+      test.execute( ExpectSeqno { isn + 2 } ); //
       test.execute( ExpectSeqnosInFlight { 0 } );
       test.execute( ExpectNoSegment {} );
     }
