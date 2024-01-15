@@ -257,10 +257,10 @@ void TCPSender::tick( const size_t ms_since_last_tick )
       TCPSenderMessage message = outstandingSeg.front();
       sendedMessageQueue.push(message);
       cout << "resent message seqno: " << message.seqno.WrappingInt32() << endl;
-      if(window_size > 0){
-        consecutiveRetrans++;
-        cur_RTO_ms *= 2;
-      }
+      //if(window_size > 0){
+      consecutiveRetrans++;
+      cur_RTO_ms *= 2;
+      //}
 
       timer = cur_RTO_ms;
     }
