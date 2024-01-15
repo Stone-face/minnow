@@ -256,8 +256,8 @@ int main()
       test.execute( Push {} );
       test.execute( ExpectMessage {}.with_no_flags().with_syn( true ).with_payload_size( 0 ).with_seqno( isn ) );
       test.execute( Push( "abc" ).with_close() );
-      test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 3 ) );
       cout << "test" << endl;
+      test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 3 ) );
       test.execute(
         ExpectMessage {}.with_payload_size( 3 ).with_data( "abc" ).with_seqno( isn + 1 ).with_no_flags() );//
       test.execute( ExpectSeqno { isn + 4 } );
