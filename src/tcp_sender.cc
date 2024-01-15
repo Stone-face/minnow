@@ -67,8 +67,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       message = {
         seqno,
         SYN,
-        // Buffer(data),
-        Buffer("abcdefgh"),
+        Buffer(data),
         FIN
       };
       seqno = seqno + message.sequence_length();
