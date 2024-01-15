@@ -33,10 +33,7 @@ uint64_t TCPSender::consecutive_retransmissions() const
 optional<TCPSenderMessage> TCPSender::maybe_send()
 {
  
-  if(isTimerRunning && timer <= 0){
-    TCPSenderMessage message = outstandingSeg.front();
-    return message;
-  }else{
+  
       if(sendedMessage.has_value()){
         TCPSenderMessage returnMessage = sendedMessage.value();
         sendedMessage = optional<TCPSenderMessage>{};
@@ -46,7 +43,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       }
 
     //}
-  }
+  
 
 
 
@@ -231,7 +228,7 @@ void TCPSender::tick( const size_t ms_since_last_tick )
   timer -= ms_since_last_tick;
   if(timer <= 0){
     if(isTimerRunning){
-      TCPSenderMessage message = outstandingSeg.front();
+      sendedMessage = outstandingSeg.front();
    
       if(window_size > 0){
         consecutiveRetrans++;
