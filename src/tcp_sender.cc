@@ -58,6 +58,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
       uint64_t sendLen = min(outbound_stream_.bytes_buffered(), equalWindowSize);
       sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
       string data;
+      cout << "reader outer size before: " << outbound_stream_.bytes_buffered() << endl;
       read( outbound_stream_, sendLen, data );
       cout << "reader outer size: " << outbound_stream_.bytes_buffered() << endl;
       
