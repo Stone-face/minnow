@@ -196,9 +196,16 @@ TCPSenderMessage TCPSender::send_empty_message() const
 void TCPSender::receive( const TCPReceiverMessage& msg )
 {
   // Your code here.
+  window_size = msg.window_size;
 
   bool isNewData = false;
   if(msg.ackno.has_value()){
+    
+    // ignore impossible ackno
+    if(msg.ackno.value().unwrap(isn_, checkpoint) > seqno.unwrap(isn_, checkpoint)){
+      return;
+    }
+
     isNewData = true;
     for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
       if (msg.ackno.value().unwrap(isn_, checkpoint) >= it->seqno.unwrap(isn_, checkpoint) + it->sequence_length()) {
@@ -209,9 +216,6 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
       }
     }
   }
-  
-  window_size = msg.window_size;
-
   
   // outstandingSeg.remove_if([ackno](TCPSenderMessage& messgae) { return ackno > messgae.seqno.WrappingInt32() + messgae.sequence_length();})
   if(outstandingSeg.empty()){
