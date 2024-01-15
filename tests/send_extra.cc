@@ -353,7 +353,7 @@ int main()
       for ( unsigned int i = 0; i < 5; i++ ) {
         test.execute( Tick { rto - 1 } );
         test.execute( ExpectNoSegment {} );
-        test.execute( Tick { 1 } );
+        test.execute( Tick { 1 } );//
         test.execute(
           ExpectMessage {}.with_payload_size( 1 ).with_data( "a" ).with_seqno( isn + 1 ).with_no_flags() );
       }

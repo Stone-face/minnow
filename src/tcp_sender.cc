@@ -117,7 +117,8 @@ void TCPSender::push( Reader& outbound_stream )
   // Your code here.
   // bs.reader() = outbound_stream;
   while(true){
-    if(static_cast<uint64_t>(window_size) <= sequenceNumbersFli){
+    uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
+    if(static_cast<uint64_t>(equalWindowSize) <= sequenceNumbersFli){
       cout << "return empty" << endl;
       return;
     }
@@ -127,7 +128,7 @@ void TCPSender::push( Reader& outbound_stream )
     //bool FIN = outbound_stream.is_finished();
     cout << "SYN: " << SYN <<  "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
     // uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
-    uint64_t availableSent =  static_cast<uint64_t>(window_size) - sequenceNumbersFli;
+    uint64_t availableSent =  equalWindowSize - sequenceNumbersFli;
     uint64_t sendLen = min(outbound_stream.bytes_buffered(), availableSent - SYN);
     sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
     // if(window_size > 0){
@@ -202,7 +203,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 {
   // Your code here.
 
-  window_size = msg.window_size == 0 ? 1: msg.window_size;
+  window_size = msg.window_size;
   
   bool isNewData = false;
   if(msg.ackno.has_value()){
@@ -258,10 +259,10 @@ void TCPSender::tick( const size_t ms_since_last_tick )
       TCPSenderMessage message = outstandingSeg.front();
       sendedMessageQueue.push(message);
       cout << "resent message seqno: " << message.seqno.WrappingInt32() << endl;
-      //if(window_size > 0){
-      consecutiveRetrans++;
-      cur_RTO_ms *= 2;
-      //}
+      if(window_size > 0){
+        consecutiveRetrans++;
+        cur_RTO_ms *= 2;
+      }
 
       timer = cur_RTO_ms;
     }
