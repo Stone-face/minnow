@@ -125,7 +125,8 @@ void TCPSender::push( Reader& outbound_stream )
     sendedMessage = optional<TCPSenderMessage>{};
     return;
   }
-  uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
+  // uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
+  uint64_t equalWindowSize =  static_cast<uint64_t>(window_size);
   uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize);
   sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
   if(window_size > 0){
