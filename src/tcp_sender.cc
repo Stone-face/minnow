@@ -134,7 +134,8 @@ void TCPSender::push( Reader& outbound_stream )
   }
   
   FIN = FIN && window_size > 0;
-  window_size -= FIN;
+  cout << "FIN: " << FIN << "window_size: " << window_size << endl;
+  // window_size -= FIN;
 
   string data;
   cout << "reader address: " << &outbound_stream << endl;
