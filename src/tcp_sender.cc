@@ -117,7 +117,7 @@ void TCPSender::push( Reader& outbound_stream )
   // Your code here.
   // bs.reader() = outbound_stream;
   while(true){
-    if(window_size == 0 || static_cast<uint64_t>(window_size) <= sequenceNumbersFli){
+    if(static_cast<uint64_t>(window_size) <= sequenceNumbersFli){
       cout << "return empty" << endl;
       return;
     }
@@ -202,7 +202,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 {
   // Your code here.
 
-  window_size = msg.window_size;
+  window_size = max(msg.window_size, 1);
   bool isNewData = false;
   if(msg.ackno.has_value()){
     

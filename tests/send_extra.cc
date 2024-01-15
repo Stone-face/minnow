@@ -344,7 +344,7 @@ int main()
       test.execute( ExpectSeqnosInFlight { 1 } );
       test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 0 ) );
       test.execute(
-        ExpectMessage {}.with_payload_size( 1 ).with_data( "a" ).with_seqno( isn + 1 ).with_no_flags() );
+        ExpectMessage {}.with_payload_size( 1 ).with_data( "a" ).with_seqno( isn + 1 ).with_no_flags() );//
       test.execute( ExpectSeqno { isn + 2 } );
       test.execute( ExpectSeqnosInFlight { 1 } );
       test.execute( Close {} );
