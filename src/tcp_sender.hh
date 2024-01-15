@@ -24,6 +24,8 @@ class TCPSender
   uint16_t window_size;
 
   std::list<TCPSenderMessage> outstandingSeg;
+
+  std::optional<TCPSenderMessage> sendedMessage{};
 public:
 
    /* Construct TCP sender with given default Retransmission Timeout and possible ISN */

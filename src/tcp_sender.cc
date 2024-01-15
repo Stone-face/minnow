@@ -32,6 +32,42 @@ uint64_t TCPSender::consecutive_retransmissions() const
 
 optional<TCPSenderMessage> TCPSender::maybe_send()
 {
+ 
+  if(!isTimerRunning && !outstandingSeg.empty()){
+    TCPSenderMessage message = outstandingSeg.front();
+   
+    if(window_size > 0){
+      consecutiveRetrans++;
+      cur_RTO_ms *= 2;
+    }
+
+    isTimerRunning = true;
+    timer = cur_RTO_ms;
+
+    return message;
+  }else{
+    
+      seqno = seqno + sendedMessage.sequence_length();
+      sequenceNumbersFli += sendedMessage.sequence_length();
+      checkpoint += sendedMessage.sequence_length();
+
+      outstandingSeg.push_back(sendedMessage);
+      //outstandingSeg.sort(compareSeg);
+
+      if(!isTimerRunning){
+        isTimerRunning = true;
+        timer = cur_RTO_ms;
+      }
+      return sendedMessage;
+    //}
+  }
+
+
+
+  
+ 
+
+  /*
   // Your code here.
   TCPSenderMessage message;
   if(!isTimerRunning && !outstandingSeg.empty()){
@@ -89,12 +125,53 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
 
   
   return message;
+  */
 }
 
 void TCPSender::push( Reader& outbound_stream )
 {
   // Your code here.
-  bs.reader() = outbound_stream;
+  // bs.reader() = outbound_stream;
+
+  bool SYN = seqno == isn_;
+  bool FIN = bs.reader().is_finished();
+  cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
+  if(outbound_stream.bytes_buffered() == 0 && !SYN && !FIN){
+    cout << "return empty" << endl;
+    sendedMessage = optional<TCPSenderMessage>{};
+  }
+  uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
+  uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize);
+  sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
+  string data;
+  cout << "reader address: " << &outbound_stream << endl;
+  cout << "reader outer size before: " << outbound_stream.bytes_buffered() << endl;
+  read( outbound_stream, sendLen, data );
+  // bs.reader().pop(3);
+  // bs.writer().push("a");
+  cout << "reader outer size: " << outbound_stream.bytes_buffered() << endl;
+  
+  sendedMessage = {
+    seqno,
+    SYN,
+    Buffer(data),
+    FIN
+  };
+
+
+
+
+  seqno = seqno + message.sequence_length();
+  sequenceNumbersFli += message.sequence_length();
+  checkpoint += message.sequence_length();
+
+  outstandingSeg.push_back(message);
+  //outstandingSeg.sort(compareSeg);
+
+  if(!isTimerRunning){
+    isTimerRunning = true;
+    timer = cur_RTO_ms;
+  }
 }
 
 TCPSenderMessage TCPSender::send_empty_message() const
