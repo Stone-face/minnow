@@ -18,17 +18,16 @@ class TCPSender
   uint64_t timer;
   bool isTimerRunning = false;
   // Reader outbound_stream_  {ByteStream(0)}; 
-  ByteStream bs{100};
+
   uint64_t consecutiveRetrans = 0;
   uint64_t sequenceNumbersFli = 0;
   Wrap32 seqno{0};
   uint16_t window_size;
 
   bool FINSent = false;
-  bool SYNSent = false;
   std::list<TCPSenderMessage> outstandingSeg;
   std::queue<TCPSenderMessage> sendedMessageQueue;
-  std::optional<TCPSenderMessage> sendedMessage{};
+  
 public:
 
    /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
