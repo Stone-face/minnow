@@ -239,9 +239,15 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 void TCPSender::tick( const size_t ms_since_last_tick )
 {
   // Your code here.
-  timer -= ms_since_last_tick;
+  
+  if(timer < ms_since_last_tick){
+    timer = 0;
+  }else{
+    timer -= ms_since_last_tick;
+  }
+
   cout << "timer: " << timer << " isRunning: " << isTimerRunning << endl;
-  if(timer <= 0){
+  if(timer == 0){
     if(isTimerRunning){
       TCPSenderMessage message = outstandingSeg.front();
       sendedMessageQueue.push(message);
