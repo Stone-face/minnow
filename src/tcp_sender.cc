@@ -116,58 +116,60 @@ void TCPSender::push( Reader& outbound_stream )
 {
   // Your code here.
   // bs.reader() = outbound_stream;
+  while(true){
+    bool SYN = seqno == isn_;
+    //bool FIN = outbound_stream.is_finished();
+    cout << "SYN: " << SYN <<  "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
+    if(window_size == 0){
+      cout << "return empty" << endl;
+      return;
+    }
+    // uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
+    uint64_t equalWindowSize =  static_cast<uint64_t>(window_size);
+    uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize);
+    sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
+    if(window_size > 0){
+      window_size -= sendLen;
+    }
+    
+    string data;
+    cout << "reader address: " << &outbound_stream << endl;
+    cout << "reader outer size before: " << outbound_stream.bytes_buffered() << endl;
+    read( outbound_stream, sendLen, data );
+    cout << "reader outer size: " << outbound_stream.bytes_buffered() << endl;
+    
+    bool FIN = outbound_stream.is_finished() && window_size > 0 && !FINSent;
+    FINSent |= FIN;
+    cout << "FIN: " << FIN << " window_size: " << window_size << endl;
+    // window_size -= FIN;
 
-  bool SYN = seqno == isn_;
-  //bool FIN = outbound_stream.is_finished();
-  cout << "SYN: " << SYN <<  "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
-  if(window_size == 0){
-    cout << "return empty" << endl;
-    return;
-  }
-  // uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
-  uint64_t equalWindowSize =  static_cast<uint64_t>(window_size);
-  uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize);
-  sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
-  if(window_size > 0){
-    window_size -= sendLen;
+    if(data.length() == 0 && !SYN && !FIN){
+      cout << "return empty" << endl;
+      return;
+    }
+
+    TCPSenderMessage message = {
+      seqno,
+      SYN,
+      Buffer(data),
+      FIN
+    };
+
+    seqno = seqno + message.sequence_length();
+    sequenceNumbersFli += message.sequence_length();
+    checkpoint += message.sequence_length();
+
+    outstandingSeg.push_back(message);
+    //outstandingSeg.sort(compareSeg);
+
+    if(!isTimerRunning){
+      isTimerRunning = true;
+      timer = cur_RTO_ms;
+    }
+
+    sendedMessageQueue.push(message);
   }
   
-  string data;
-  cout << "reader address: " << &outbound_stream << endl;
-  cout << "reader outer size before: " << outbound_stream.bytes_buffered() << endl;
-  read( outbound_stream, sendLen, data );
-  cout << "reader outer size: " << outbound_stream.bytes_buffered() << endl;
-  
-  bool FIN = outbound_stream.is_finished() && window_size > 0 && !FINSent;
-  FINSent |= FIN;
-  cout << "FIN: " << FIN << " window_size: " << window_size << endl;
-  // window_size -= FIN;
-
-  if(data.length() == 0 && !SYN && !FIN){
-    cout << "return empty" << endl;
-    return;
-  }
-
-  TCPSenderMessage message = {
-    seqno,
-    SYN,
-    Buffer(data),
-    FIN
-  };
-
-  seqno = seqno + message.sequence_length();
-  sequenceNumbersFli += message.sequence_length();
-  checkpoint += message.sequence_length();
-
-  outstandingSeg.push_back(message);
-  //outstandingSeg.sort(compareSeg);
-
-  if(!isTimerRunning){
-    isTimerRunning = true;
-    timer = cur_RTO_ms;
-  }
-
-  sendedMessageQueue.push(message);
 
 
 
