@@ -16,7 +16,8 @@ class TCPSender
   uint64_t cur_RTO_ms;
   uint64_t timer;
   bool isTimerRunning = false;
-  Reader outbound_stream_  {}; 
+  // Reader outbound_stream_  {ByteStream(0)}; 
+  ByteStream bs{100};
   uint64_t consecutiveRetrans = 0;
   uint64_t sequenceNumbersFli = 0;
   Wrap32 seqno{0};

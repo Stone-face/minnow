@@ -46,22 +46,22 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
     timer = cur_RTO_ms;
 
   }else{
-    //if(outbound_stream_.bytes_buffered() != 0){
+    //if(bs.reader().bytes_buffered() != 0){
       bool SYN = seqno == isn_;
-      bool FIN = outbound_stream_.is_finished();
-      cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream_.bytes_buffered() << endl;
-      if(outbound_stream_.bytes_buffered() == 0 && !SYN && !FIN){
+      bool FIN = bs.reader().is_finished();
+      cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << bs.reader().bytes_buffered() << endl;
+      if(bs.reader().bytes_buffered() == 0 && !SYN && !FIN){
         cout << "return empty" << endl;
         return optional<TCPSenderMessage>{};
       }
       uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
-      uint64_t sendLen = min(outbound_stream_.bytes_buffered(), equalWindowSize);
+      uint64_t sendLen = min(bs.reader().bytes_buffered(), equalWindowSize);
       sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
       string data;
-      cout << "reader address: " << &outbound_stream_ << endl;
-      cout << "reader outer size before: " << outbound_stream_.bytes_buffered() << endl;
-      read( outbound_stream_, sendLen, data );
-      cout << "reader outer size: " << outbound_stream_.bytes_buffered() << endl;
+      cout << "reader address: " << &bs.reader() << endl;
+      cout << "reader outer size before: " << bs.reader().bytes_buffered() << endl;
+      read( bs.reader(), sendLen, data );
+      cout << "reader outer size: " << bs.reader().bytes_buffered() << endl;
       
       message = {
         seqno,
@@ -92,7 +92,7 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
 void TCPSender::push( Reader& outbound_stream )
 {
   // Your code here.
-  outbound_stream_ = outbound_stream;
+  bs.reader() = outbound_stream;
 }
 
 TCPSenderMessage TCPSender::send_empty_message() const
