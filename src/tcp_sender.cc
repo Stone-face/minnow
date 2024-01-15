@@ -33,17 +33,8 @@ uint64_t TCPSender::consecutive_retransmissions() const
 optional<TCPSenderMessage> TCPSender::maybe_send()
 {
  
-  if(!isTimerRunning && !outstandingSeg.empty()){
+  if(isTimerRunning && timer <= 0){
     TCPSenderMessage message = outstandingSeg.front();
-   
-    if(window_size > 0){
-      consecutiveRetrans++;
-      cur_RTO_ms *= 2;
-    }
-
-    isTimerRunning = true;
-    timer = cur_RTO_ms;
-
     return message;
   }else{
       if(sendedMessage.has_value()){
@@ -142,7 +133,7 @@ void TCPSender::push( Reader& outbound_stream )
   if(window_size > 0){
     window_size -= sendLen;
   }
-  
+
   string data;
   cout << "reader address: " << &outbound_stream << endl;
   cout << "reader outer size before: " << outbound_stream.bytes_buffered() << endl;
@@ -239,7 +230,19 @@ void TCPSender::tick( const size_t ms_since_last_tick )
   // Your code here.
   timer -= ms_since_last_tick;
   if(timer <= 0){
-    isTimerRunning = false;
+    if(isTimerRunning){
+      TCPSenderMessage message = outstandingSeg.front();
+   
+      if(window_size > 0){
+        consecutiveRetrans++;
+        cur_RTO_ms *= 2;
+      }
+
+      timer = cur_RTO_ms;
+    }
   }
+
+
+  
   
 }
