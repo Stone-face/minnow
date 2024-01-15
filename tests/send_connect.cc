@@ -77,7 +77,7 @@ int main()
       test.execute( Push { "abcdefgh" } );
       test.execute( Tick { 1 } );
       //test.execute( ExpectMessage {});
-      test.execute( ExpectMessage {}.with_seqno( isn + 1 ).with_data( "abcdefgh" ) );
+      test.execute( ExpectMessage {}.with_seqno( isn + 1 ).with_data( "abcdefgh" ) );//
       test.execute( ExpectSeqno { isn + 9 } );
       test.execute( ExpectSeqnosInFlight { 8 } );
       cout << "test: " << endl;
