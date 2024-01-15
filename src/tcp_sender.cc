@@ -46,8 +46,9 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
 
     return message;
   }else{
-    
-      return sendedMessage;
+      TCPSenderMessage returnMessage = sendedMessage;
+      sendedMessage = optional<TCPSenderMessage>{};
+      return returnMessage;
     //}
   }
 
@@ -123,7 +124,7 @@ void TCPSender::push( Reader& outbound_stream )
   // bs.reader() = outbound_stream;
 
   bool SYN = seqno == isn_;
-  bool FIN = bs.reader().is_finished();
+  bool FIN = outbound_stream.is_finished();
   cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
   if(outbound_stream.bytes_buffered() == 0 && !SYN && !FIN){
     cout << "return empty" << endl;

@@ -67,7 +67,7 @@ int main()
         test.execute( ExpectMessage {}
                         .with_seqno( isn + 1 + static_cast<uint32_t>( bytes_sent - block_size ) )
                         .with_data( move( data ) ) );
-        test.execute( ExpectNoSegment {} );
+        test.execute( ExpectNoSegment {} ); // Expect nothing
         test.execute( AckReceived { Wrap32 { isn + 1 + static_cast<uint32_t>( bytes_sent ) } } );
       }
     }
