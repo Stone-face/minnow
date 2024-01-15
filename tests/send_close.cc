@@ -139,8 +139,9 @@ int main()
       test.execute( ExpectSeqno { isn + 2 } );
       test.execute( ExpectSeqnosInFlight { 1 } );
       test.execute( ExpectNoSegment {} );
+      cout << "test" << endl;
       test.execute( AckReceived { Wrap32 { isn + 2 } } );
-      test.execute( ExpectSeqnosInFlight { 0 } );
+      test.execute( ExpectSeqnosInFlight { 0 } ); //
       test.execute( ExpectSeqno { isn + 2 } );
       test.execute( ExpectNoSegment {} );
     }

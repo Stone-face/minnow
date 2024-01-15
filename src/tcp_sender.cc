@@ -233,6 +233,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
   }
 
   cout << "list size: " << outstandingSeg.size() << endl;
+  cout << "sequenceNumbersFli " << sequenceNumbersFli << endl;
 }
 
 void TCPSender::tick( const size_t ms_since_last_tick )
