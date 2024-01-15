@@ -207,11 +207,12 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
       return;
     }
 
-    isNewData = true;
+    
     for (auto it = outstandingSeg.begin(); it != outstandingSeg.end(); /* no increment here */) {
       if (msg.ackno.value().unwrap(isn_, checkpoint) >= it->seqno.unwrap(isn_, checkpoint) + it->sequence_length()) {
           sequenceNumbersFli -= it->sequence_length();
           it = outstandingSeg.erase(it);
+          isNewData = true;
       } else {
           ++it;
       }
