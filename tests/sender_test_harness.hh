@@ -171,7 +171,7 @@ struct Receive : public Action<StreamAndSender>
   {
     ss.second.receive( msg_ );
     if ( push_ ) {
-      ss.second.push( ss.first.reader() );
+      //ss.second.push( ss.first.reader() );
     }
   }
 
