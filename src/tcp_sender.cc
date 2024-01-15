@@ -201,8 +201,7 @@ TCPSenderMessage TCPSender::send_empty_message() const
 void TCPSender::receive( const TCPReceiverMessage& msg )
 {
   // Your code here.
-  window_size = msg.window_size;
-
+  
   bool isNewData = false;
   if(msg.ackno.has_value()){
     
@@ -229,6 +228,7 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
   }
 
   if(isNewData){
+    window_size = msg.window_size;
     cur_RTO_ms = initial_RTO_ms_;
     if(!outstandingSeg.empty()){
       isTimerRunning = true;
