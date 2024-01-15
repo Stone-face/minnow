@@ -35,12 +35,12 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
  
       // use another queue instead of sendedMessage?
 
-      if(sendedMessage.has_value()){
-        TCPSenderMessage returnMessage = sendedMessage.value();
-        sendedMessage = optional<TCPSenderMessage>{};
+      if(!sendedMessageQueue.empty()){
+        TCPSenderMessage returnMessage = sendedMessageQueue.front();
+        sendedMessageQueue.pop();
         return returnMessage;
       }else{
-        return sendedMessage;
+        return optional<TCPSenderMessage>{};
       }
 
     //}
@@ -162,7 +162,7 @@ void TCPSender::push( Reader& outbound_stream )
     timer = cur_RTO_ms;
   }
 
-  sendedMessage = message;
+  sendedMessageQueue.push(message);
 
 
 
@@ -232,8 +232,8 @@ void TCPSender::tick( const size_t ms_since_last_tick )
   timer -= ms_since_last_tick;
   if(timer <= 0){
     if(isTimerRunning){
-      sendedMessage = outstandingSeg.front();
-   
+      TCPSenderMessage message = outstandingSeg.front();
+      sendedMessageQueue.push(message);
       if(window_size > 0){
         consecutiveRetrans++;
         cur_RTO_ms *= 2;

@@ -6,6 +6,7 @@
 #include <random>
 #include <cstdint>
 #include <list>
+#include <queue>
 #include <iostream>
 
 class TCPSender
@@ -24,7 +25,7 @@ class TCPSender
   uint16_t window_size;
 
   std::list<TCPSenderMessage> outstandingSeg;
-
+  std::queue<TCPSenderMessage> sendedMessageQueue;
   std::optional<TCPSenderMessage> sendedMessage{};
 public:
 
