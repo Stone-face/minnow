@@ -35,8 +35,9 @@ int main()
       test.execute( ExpectNoSegment {} );
       test.execute( Push( "def" ) );
       test.execute( ExpectMessage {}.with_payload_size( 3 ).with_data( "def" ) );
+      cout << "test" << endl;
       test.execute( Tick { 6 } );
-      test.execute( ExpectMessage {}.with_payload_size( 3 ).with_data( "abc" ).with_seqno( isn + 1 ) );
+      test.execute( ExpectMessage {}.with_payload_size( 3 ).with_data( "abc" ).with_seqno( isn + 1 ) );//
       test.execute( ExpectNoSegment {} );
     }
 
