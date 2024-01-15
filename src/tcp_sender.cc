@@ -33,7 +33,8 @@ uint64_t TCPSender::consecutive_retransmissions() const
 optional<TCPSenderMessage> TCPSender::maybe_send()
 {
  
-  
+      // use another queue instead of sendedMessage?
+
       if(sendedMessage.has_value()){
         TCPSenderMessage returnMessage = sendedMessage.value();
         sendedMessage = optional<TCPSenderMessage>{};
@@ -130,9 +131,9 @@ void TCPSender::push( Reader& outbound_stream )
   if(window_size > 0){
     window_size -= sendLen + SYN;
   }
-  FIN = FIN && window_size > 0;
-  window_size -= FIN;
-  
+  // FIN = FIN && window_size > 0;
+  // window_size -= FIN;
+
   string data;
   cout << "reader address: " << &outbound_stream << endl;
   cout << "reader outer size before: " << outbound_stream.bytes_buffered() << endl;
