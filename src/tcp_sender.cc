@@ -47,17 +47,6 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
     return message;
   }else{
     
-      seqno = seqno + sendedMessage.sequence_length();
-      sequenceNumbersFli += sendedMessage.sequence_length();
-      checkpoint += sendedMessage.sequence_length();
-
-      outstandingSeg.push_back(sendedMessage);
-      //outstandingSeg.sort(compareSeg);
-
-      if(!isTimerRunning){
-        isTimerRunning = true;
-        timer = cur_RTO_ms;
-      }
       return sendedMessage;
     //}
   }
@@ -139,6 +128,7 @@ void TCPSender::push( Reader& outbound_stream )
   if(outbound_stream.bytes_buffered() == 0 && !SYN && !FIN){
     cout << "return empty" << endl;
     sendedMessage = optional<TCPSenderMessage>{};
+    return;
   }
   uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
   uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize);
@@ -157,6 +147,18 @@ void TCPSender::push( Reader& outbound_stream )
     Buffer(data),
     FIN
   };
+
+  seqno = seqno + sendedMessage.sequence_length();
+  sequenceNumbersFli += sendedMessage.sequence_length();
+  checkpoint += sendedMessage.sequence_length();
+
+  outstandingSeg.push_back(sendedMessage);
+  //outstandingSeg.sort(compareSeg);
+
+  if(!isTimerRunning){
+    isTimerRunning = true;
+    timer = cur_RTO_ms;
+  }
 
 
 
