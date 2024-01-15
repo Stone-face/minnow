@@ -141,24 +141,26 @@ void TCPSender::push( Reader& outbound_stream )
   // bs.writer().push("a");
   cout << "reader outer size: " << outbound_stream.bytes_buffered() << endl;
   
-  sendedMessage = {
+  TCPSenderMessage message = {
     seqno,
     SYN,
     Buffer(data),
     FIN
   };
 
-  seqno = seqno + sendedMessage.sequence_length();
-  sequenceNumbersFli += sendedMessage.sequence_length();
-  checkpoint += sendedMessage.sequence_length();
+  seqno = seqno + message.sequence_length();
+  sequenceNumbersFli += message.sequence_length();
+  checkpoint += message.sequence_length();
 
-  outstandingSeg.push_back(sendedMessage);
+  outstandingSeg.push_back(message);
   //outstandingSeg.sort(compareSeg);
 
   if(!isTimerRunning){
     isTimerRunning = true;
     timer = cur_RTO_ms;
   }
+
+  sendedMessage = message;
 
 
 
