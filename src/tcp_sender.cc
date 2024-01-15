@@ -131,7 +131,8 @@ void TCPSender::push( Reader& outbound_stream )
   if(window_size > 0){
     window_size -= sendLen;
   }
-  // FIN = FIN && window_size > 0;
+  
+  FIN = FIN && window_size > 0;
   // window_size -= FIN;
 
   string data;
