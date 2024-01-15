@@ -46,9 +46,14 @@ optional<TCPSenderMessage> TCPSender::maybe_send()
 
     return message;
   }else{
-      TCPSenderMessage returnMessage = sendedMessage;
-      sendedMessage = optional<TCPSenderMessage>{};
-      return returnMessage;
+      if(sendedMessage.has_value()){
+        TCPSenderMessage returnMessage = sendedMessage.value();
+        sendedMessage = optional<TCPSenderMessage>{};
+        return returnMessage;
+      }else{
+        return sendedMessage;
+      }
+
     //}
   }
 
