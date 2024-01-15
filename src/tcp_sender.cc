@@ -202,7 +202,8 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
 {
   // Your code here.
 
-  window_size = max(msg.window_size, 1US);
+  window_size = msg.window_size == 0 ? 1: window_size;
+  
   bool isNewData = false;
   if(msg.ackno.has_value()){
     
