@@ -125,12 +125,14 @@ void TCPSender::push( Reader& outbound_stream )
     return;
   }
   uint64_t equalWindowSize = max(1UL, static_cast<uint64_t>(window_size));
-  uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize);
+  uint64_t sendLen = min(outbound_stream.bytes_buffered(), equalWindowSize - SYN);
   sendLen = min(sendLen, TCPConfig::MAX_PAYLOAD_SIZE);
   if(window_size > 0){
-    window_size -= sendLen;
+    window_size -= sendLen + SYN;
   }
-
+  FIN = FIN && window_size > 0;
+  window_size -= FIN;
+  
   string data;
   cout << "reader address: " << &outbound_stream << endl;
   cout << "reader outer size before: " << outbound_stream.bytes_buffered() << endl;
