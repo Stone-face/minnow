@@ -120,7 +120,7 @@ void TCPSender::push( Reader& outbound_stream )
   bool SYN = seqno == isn_;
   bool FIN = outbound_stream.is_finished();
   cout << "SYN: " << SYN << " FIN: " << FIN << "stream_bytes: "  << outbound_stream.bytes_buffered() << endl;
-  if(outbound_stream.bytes_buffered() == 0 && !SYN && !FIN){
+  if(window_size == 0 || (outbound_stream.bytes_buffered() == 0 && !SYN && !FIN)){
     cout << "return empty" << endl;
     sendedMessage = optional<TCPSenderMessage>{};
     return;
