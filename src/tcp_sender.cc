@@ -160,18 +160,6 @@ void TCPSender::push( Reader& outbound_stream )
 
 
 
-
-  seqno = seqno + message.sequence_length();
-  sequenceNumbersFli += message.sequence_length();
-  checkpoint += message.sequence_length();
-
-  outstandingSeg.push_back(message);
-  //outstandingSeg.sort(compareSeg);
-
-  if(!isTimerRunning){
-    isTimerRunning = true;
-    timer = cur_RTO_ms;
-  }
 }
 
 TCPSenderMessage TCPSender::send_empty_message() const
